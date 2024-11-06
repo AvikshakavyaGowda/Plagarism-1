@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PDF Text Comparison</title>
+</head>
+<body>
+  <form id="pdf-upload-form" enctype="multipart/form-data">
+    <input type="file" name="pdfFile" accept=".pdf">
+    <button type="submit">Upload and Compare</button>
+  </form>
+  <div id="results"></div>
+
+  <script>
+    const form = document.getElementById('pdf-upload-form');
+    const resultsDiv = document.getElementById('results');
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault(); 
+
+      const formData = new FormData(form);
+      fetch('/extract-text', {
+        method: 'POST',
+        body: formData 
+      })
+      .then(response => response.json())
+      .then(data => {
+        resultsDiv.innerHTML = data.similarityResults.map(result => 
+          `<p>Similarity: ${result.similarityPercentage} - ${result.storedText.substring(0, 50)}...</p>` 
+        ).join('');
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        resultsDiv.textContent = 'An error occurred!';
+      });
+    });
+  </script>
+</body>
+</html>
