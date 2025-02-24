@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PlagiShield - Admin Login</title>
+  <link rel="stylesheet" href="stiles.css">
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo">
+      <img src="logo.png" alt="PlagiShield Logo">
+    </div>
+    <h1>PlagiShield</h1>
+    <h2>Admin Login</h2>
+    <form id="login-form">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" placeholder="Enter your email" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter your password" required>
+      </div>
+      <button type="submit" class="btn">Login</button>
+    </form>
+    <p class="error-message" style="color: red; display: none;">Invalid email or password.</p>
+  </div>
+
+  <script>
+    // Admin login script
+    document.getElementById("login-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      // Define multiple admins
+      const admins = {
+        "avikshakavyagowda1410@gmail.com": { name: "Aviksha Kavya Gowda", password: "1410" },
+        "yogeshtejaslalitha@gmail.com": { name: "Yogesh Tejas Lalitha", password: "1234" }
+      };
+
+      // Check if the entered credentials match any admin
+      if (admins[email] && admins[email].password === password) {
+        // Store logged-in admin's name
+        localStorage.setItem("loggedInUser", admins[email].name);
+        window.location.href = "dashboard.html";
+      } else {
+        // Show error message for invalid credentials
+        const errorMessage = document.querySelector(".error-message");
+        errorMessage.style.display = "block";
+      }
+    });
+  </script>
+</body>
+</html>

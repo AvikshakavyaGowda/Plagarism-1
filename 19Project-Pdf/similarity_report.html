@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Similarity Report - PlagiShield</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="logo">
+      <img src="logo.png" alt="PlagiShield Logo">
+      <h1>PlagiShield</h1>
+    </div>
+    <div class="user-info">
+      <span id="logged-in-user">Welcome, Aviksha Kavya Gowda</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <h2>Plagiarism Detection Results</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>File Name</th>
+          <th>Similarity (%)</th>
+          <th>Matched Trigrams</th>
+        </tr>
+      </thead>
+      <tbody id="results-table">
+      </tbody>
+    </table>
+    <div class="actions">
+      <button id="download-report" class="btn">Download Report</button>
+    </div>
+  </main>
+
+  <script>
+    // Fetch similarity data from local storage or backend API
+    const similarityData = JSON.parse(localStorage.getItem("similarityReport"));
+
+    if (similarityData) {
+      const tableBody = document.getElementById("results-table");
+
+      similarityData.forEach(item => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.file}</td>
+          <td>${item.similarity}%</td>
+          <td>${item.matchedTrigrams.length > 0 ? item.matchedTrigrams.join(", ") : "No Matches"}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    } else {
+      document.querySelector(".container").innerHTML += "<p>No similarity data available.</p>";
+    }
+
+    // Download PDF report
+    document.getElementById("download-report").addEventListener("click", () => {
+      window.open("/similarity-report.pdf", "_blank");
+    });
+  </script>
+</body>
+</html>

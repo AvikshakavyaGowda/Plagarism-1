@@ -1,0 +1,190 @@
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom, #87ceeb, #f0f8ff);
+    color: #333;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Header Styling */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .logo img {
+    width: 30px; /* Reduced logo size to match dashboard */
+    height: auto;
+    margin-right: 10px;
+  }
+  
+  .logo h1 {
+    font-size: 24px;
+    margin: 0;
+  }
+  
+  .user-info {
+    text-align: right;
+  }
+  
+  button {
+    padding: 10px 15px;
+    background-color: #ff4d4d;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+  }
+  
+  button:hover {
+    background-color: #e60000;
+  }
+  
+  /* Form Styles (For Login and Dashboard) */
+  form {
+    width: 80%;
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  input[type="text"], input[type="password"], input[type="file"], select, button {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+  }
+  
+  button[type="submit"], #add-file-btn {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+  }
+  
+  button[type="submit"]:hover, #add-file-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  /* For Dashboard Specific Styles */
+  .dashboard {
+    padding: 20px;
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  /* File Upload Section */
+  #file-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .file-input {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  button.delete-file-btn {
+    background-color: #ff4d4d;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+  }
+  
+  button.delete-file-btn:hover {
+    background-color: #e60000;
+  }
+  
+  #similarity-results {
+    margin-top: 30px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  
+  th {
+    background-color: #f4f4f4;
+  }
+  
+  #similarity-percentage {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #007bff;
+  }
+  
+  /* Login Page Specific Styles */
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+  }
+  
+  .login-container h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+  }
+  
+  input[type="text"], input[type="password"] {
+    margin-bottom: 20px;
+  }
+  
+  form button {
+    padding: 12px;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+  }
+  
+  form button:hover {
+    background-color: #0056b3;
+  }

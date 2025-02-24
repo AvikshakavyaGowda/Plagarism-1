@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - PlagiShield</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <header class="header">
+    <div class="logo"> 
+      <img src="logo.png" alt="PlagiShield Logo">
+      <h1>PlagiShield</h1>
+    </div>
+    <div class="user-info">
+      <span id="logged-in-user"></span>
+      <button onclick="logout()">Logout</button>
+    </div>
+  </header>
+
+  <main class="dashboard">
+    <h2>Upload and Compare Files</h2>
+
+    <!-- Language Selection Section -->
+    <div>
+      <label for="language">Select Language:</label>
+      <select id="language" name="language" required>
+        <option value="en">English</option>
+        <option value="hi">Hindi</option>
+        <option value="kn">Kannada</option>
+      </select>
+    </div>
+
+    <!-- File Upload Form -->
+    <form id="file-upload-form">
+      <div>
+        <label for="original-file">Upload Original File:</label>
+        <input type="file" id="original-file" name="originalFile" accept=".pdf" required>
+      </div>
+      <div id="compare-files-section">
+        <label for="compare-files">Upload Files to Compare:</label>
+        <div id="file-inputs">
+          <div class="file-input">
+            <input type="file" name="compareFiles" accept=".pdf">
+            <button type="button" class="delete-file-btn">Delete</button>
+          </div>
+        </div>
+        <button type="button" id="add-file-btn">Add Another File</button>
+      </div>
+      <button type="submit" class="btn">Compare</button>
+    </form>
+
+    <section id="similarity-results" style="display:none;">
+      <h2>Similarity Results</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>File Name</th>
+            <th>Similarity (%)</th>
+          </tr>
+        </thead>
+        <tbody id="similarity-results-table">
+          <!-- Dynamic rows will be added -->
+        </tbody>
+      </table>
+      <button id="download-report-btn" style="display:none;">Download Similarity Report</button>
+    </section>
+  </main>
+
+  <script>
+    // Display logged-in user
+    const loggedInUser = localStorage.getItem("loggedInUser");
+    document.getElementById("logged-in-user").textContent = `Welcome, ${loggedInUser}`;
+
+    // Add file input functionality
+    const maxFiles = 7;
+    const fileInputsContainer = document.getElementById("file-inputs");
+    const addFileButton = document.getElementById("add-file-btn");
+
+    addFileButton.addEventListener("click", () => {
+      const fileInputs = document.querySelectorAll("#file-inputs .file-input");
+      if (fileInputs.length < maxFiles) {
+        const newFileInput = document.createElement("div");
+        newFileInput.classList.add("file-input");
+        newFileInput.innerHTML = `
+          <input type="file" name="compareFiles" accept=".pdf">
+          <button type="button" class="delete-file-btn">Delete</button>
+        `;
+        fileInputsContainer.appendChild(newFileInput);
+      } else {
+        alert("You can only add up to 7 files.");
+      }
+    });
+
+    fileInputsContainer.addEventListener("click", (e) => {
+      if (e.target.classList.contains("delete-file-btn")) {
+        e.target.parentElement.remove();
+      }
+    });
+
+    // File comparison submission
+    document.getElementById("file-upload-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const selectedLanguage = document.getElementById("language").value; // Get the selected language
+      formData.append('language', selectedLanguage);  // Append language to form data
+
+      try {
+        const response = await fetch("/compare", { 
+          method: "POST", 
+          body: formData 
+        });
+
+        if (!response.ok) {
+          throw new Error("Error in file comparison request.");
+        }
+
+        const result = await response.json();
+
+        if (result.report) {
+          // Display similarity results
+          const resultsTable = document.getElementById("similarity-results-table");
+          resultsTable.innerHTML = ""; // Clear previous results
+
+          result.report.forEach((item) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${item.file}</td>
+              <td>${item.similarity}</td>
+            `;
+            resultsTable.appendChild(row);
+          });
+
+          // Show the results section
+          document.getElementById("similarity-results").style.display = "block";
+
+          // Allow the user to download the report
+          const downloadBtn = document.getElementById("download-report-btn");
+          downloadBtn.style.display = "inline-block";
+
+          // Add download functionality for PDF
+          downloadBtn.addEventListener("click", () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.setFontSize(16);
+            doc.text("Similarity Report", 20, 20);
+
+            // Add table data to the PDF
+            let y = 40;
+            doc.setFontSize(12);
+            result.report.forEach((item, index) => {
+              doc.text(`${index + 1}. File: ${item.file} - Similarity: ${item.similarity}%`, 20, y);
+              y += 10;
+            });
+
+            // Trigger PDF download
+            doc.save("similarity_report.pdf");
+          });
+        } else {
+          alert("Error in processing the files.");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("An error occurred while processing the files. Please try again.");
+      }
+    });
+
+    // Logout function
+    function logout() {
+      localStorage.removeItem("loggedInUser");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>
